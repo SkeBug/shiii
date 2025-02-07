@@ -1,0 +1,153 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x", "linux-musl", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                      String                    @id @default(uuid())
+  externalId              String                    @unique
+  email                   String                    @unique
+  name                    String
+  password                String?
+  managerId               String?
+  manager                 User?                     @relation("ManagerToMember", fields: [managerId], references: [id], onUpdate: Cascade, onDelete: SetNull)
+  members                 User[]                    @relation("ManagerToMember")
+  roleId                  String
+  role                    Role                      @relation(fields: [roleId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  areaId                  String
+  area                    Area                      @relation(fields: [areaId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  active                  Boolean                   @default(true)
+  deletedAt               DateTime?
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime                  @updatedAt
+  Rectification           Rectification[]
+  UserAccountTypes        UserAccountTypes[]
+  AccountTypeApplications AccountTypeApplications[]
+  ApplicationEntitlements ApplicationEntitlements[]
+
+  @@map("users")
+}
+
+model AccountType {
+  id                      String                    @id @default(uuid())
+  name                    String                    @unique
+  description             String?
+  active                  Boolean                   @default(true)
+  deletedAt               DateTime?
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime                  @updatedAt
+  UserAccountTypes        UserAccountTypes[]
+  AccountTypeApplications AccountTypeApplications[]
+
+  @@map("account_types")
+}
+
+model UserAccountTypes {
+  userId        String
+  user          User        @relation(fields: [userId], references: [id])
+  accountTypeId String
+  accountType   AccountType @relation(fields: [accountTypeId], references: [id])
+  deletedAt     DateTime?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@id([userId, accountTypeId])
+  @@map("user_account_types")
+}
+
+model Application {
+  id                      String                    @id @default(uuid())
+  name                    String
+  description             String?
+  active                  Boolean                   @default(true)
+  deletedAt               DateTime?
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime                  @updatedAt
+  AccountTypeApplications AccountTypeApplications[]
+  ApplicationEntitlements ApplicationEntitlements[]
+
+  @@map("applications")
+}
+
+model AccountTypeApplications {
+  accountTypeId String
+  accountType   AccountType @relation(fields: [accountTypeId], references: [id])
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id])
+  userId        String
+  user          User        @relation(fields: [userId], references: [id])
+  deletedAt     DateTime?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@id([accountTypeId, applicationId, userId])
+  @@map("account_type_applications")
+}
+
+model Entitlement {
+  id                      String                    @id @default(uuid())
+  name                    String
+  description             String?
+  active                  Boolean                   @default(true)
+  deletedAt               DateTime?
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime                  @updatedAt
+  ApplicationEntitlements ApplicationEntitlements[]
+
+  @@map("entitlements")
+}
+
+model ApplicationEntitlements {
+  applicationId String
+  application   Application @relation(fields: [applicationId], references: [id])
+  entitlementId String
+  entitlement   Entitlement @relation(fields: [entitlementId], references: [id])
+  userId        String
+  user          User        @relation(fields: [userId], references: [id])
+  deletedAt     DateTime?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@id([applicationId, entitlementId, userId])
+  @@map("application_entitlements")
+}
+
+model Role {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  User        User[]
+
+  @@map("roles")
+}
+
+model Area {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  description String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  User        User[]
+
+  @@map("areas")
+}
+
+model Rectification {
+  id          String   @id @default(uuid())
+  description String?
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("rectifications")	
+}

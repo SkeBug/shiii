@@ -1,0 +1,37 @@
+services:
+  postgres_aopam:
+    image: postgres
+    restart: always
+    container_name: postgres_aopam
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - '5432:5432'
+    volumes:
+      - .:/home/node/aopam/postgres/data
+    networks:
+      - aopam-network
+  
+  aopam_backend:
+    build:
+      dockerfile: Dockerfile
+      context: .
+      target: development
+    container_name: aopam
+    volumes:
+      - .:/home/node/aopam
+    env_file:
+      - .env
+    ports:
+      - 3000:3000
+      - 5555:5555
+    depends_on:
+      - postgres_aopam
+    networks:
+      - aopam-network
+
+networks:
+  aopam-network:
+    driver: bridge
