@@ -65,6 +65,13 @@ async function main() {
         },  
     });
 
+    await prisma.entitlement.createMany({
+        data: [
+            { name: "SB24.View", description: "View SB24" },
+            { name: "SB24.Edit", description: "Edit SB24" },
+        ],
+    });
+
     await prisma.application.createMany({
         data: [
             { name: "SB24" },
