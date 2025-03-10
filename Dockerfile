@@ -46,6 +46,7 @@ WORKDIR /home/node/aopam
 # Install certificates and required packages
 RUN apt-get update && \
     apt-get install -y ca-certificates openssl && \
+    rm -rf /var/lib/apt/lists/* && \
     npm config set strict-ssl false
 
 COPY --chown=node:node package*.json ./
