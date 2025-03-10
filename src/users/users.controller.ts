@@ -8,7 +8,7 @@ import { ReadOneUserDto } from './dto/read-one-user.dto';
 import { JwtAuthGuard } from 'src/auth/jwt.guard';
 import { Roles } from 'src/auth/roles/roles.decorator';
 import { RolesGuard } from 'src/auth/roles/roles.guard';
-import { ApiQuery } from '@nestjs/swagger';
+import { ApiQuery, ApiResponse } from '@nestjs/swagger';
 
 @Controller()
 export class UsersController {
@@ -68,23 +68,27 @@ export class UsersController {
     });
   }
 
-//   @Roles('Admin', 'Manager')
-//   @UseGuards(JwtAuthGuard, RolesGuard)
-//   @Get('user/:id')
-//   async findOne(
-//     @Res() response: FastifyReply,
-//     @Param('id') id: string
-//   ): Promise<ReadOneUserDto | null | string> {
-//     try {
-//       const user = await this.usersService.findOne(id);
-//       if (!user) {
-//         return response.status(HttpStatus.NOT_FOUND).send('User not found');
-//       }
-//       return response.status(HttpStatus.OK).send(user);
-//     } catch (error) {
-//       return response.status(HttpStatus.BAD_REQUEST).send({ message: error.message });
-//     }
-//   }
+  // @Roles('Admin', 'Manager')
+  // @UseGuards(JwtAuthGuard, RolesGuard)
+  @Get('user/:id')
+  @ApiQuery({ name: 'id', required: true })
+  @ApiResponse({ status: 200, description: 'User found', type: ReadOneUserDto })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  @ApiResponse({ status: 400, description: 'Bad request' })
+  async findOne(
+    @Res() response: FastifyReply,
+    @Param('id') id: string
+  ): Promise<ReadOneUserDto | null | string> {
+    try {
+      const user = await this.usersService.findOne(id);
+      if (!user) {
+        return response.status(HttpStatus.NOT_FOUND).send('User not found');
+      }
+      return response.status(HttpStatus.OK).send(user);
+    } catch (error) {
+      return response.status(HttpStatus.BAD_REQUEST).send({ message: error.message });
+    }
+  }
 
 //   @Roles('Admin', 'Manager')
 //   @UseGuards(JwtAuthGuard, RolesGuard)

@@ -10,7 +10,7 @@ import { application } from 'express';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) { }
 
   async create(user: CreateUserDto) {
     return await this.prisma.$transaction(async (prisma) => {
@@ -346,6 +346,10 @@ export class UsersService {
     };
   }
 
+  async findOne(id: string){
+    return 'method not implemented';
+  }
+  
   //   async findOne(id: string): Promise<ReadOneUserDto> {
   //     const user = await this.prisma.user.findUnique({
   //       where: {
