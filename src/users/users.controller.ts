@@ -125,7 +125,7 @@ export class UsersController {
     required: true,
     example: 'f3d1b3e8-6f4e-4f9a-8d4e-8d3f3e8d4e8d'
   })
-  @ApiResponse({ status: 200, description: 'User updated', type: 'User updated' })
+  @ApiResponse({ status: 200, description: 'User updated' })
   @ApiResponse({ status: 404, description: 'User not found' })
   @ApiResponse({ status: 400, description: 'Bad request' })
   update(
