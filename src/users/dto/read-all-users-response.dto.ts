@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Meta } from 'src/common/dto/meta.dto';
 
 class Manager {
     /** Represents the manager identifier (UUID). *
@@ -179,38 +180,6 @@ class User {
 
     /** Represents each application of the user with its entitlements. */
     applicationsEntitlements: ApplicationsEntitlementsRead[]
-}
-
-class Meta {
-    /** Represents the total number of users.
-     * @example 100
-    */
-    total: number
-
-    /** Represents the current page.
-     * @example 1
-    */
-    currentPage: number
-    
-    /** Represents the last page.
-     * @example 10
-    */
-    lastPage: number
-    
-    /** Represents the number of users per page.
-     * @example 10
-    */
-    limit: number
-
-    /** Represents the previous page URL.
-     * @example "/users?page=1&limit=10"
-    */
-    prev: string | null
-    
-    /** Represents the next page URL.
-     * @example "/users?page=3&limit=10"
-    */
-    next: string | null
 }
 
 export class ReadAllUsersResponse {

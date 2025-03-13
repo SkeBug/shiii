@@ -1,5 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger"
 import { IsNotEmpty, IsString } from "class-validator"
+import { Meta } from "src/common/dto/meta.dto";
 
 class AccountTypes {
     /**
@@ -25,5 +26,8 @@ export class ReadAllAccountTypesResponse {
      * @example [{ "name": "EA", "description": "Elevated Account" }]
      */
     @ApiProperty({ type: [AccountTypes] })
-    accountTypes: AccountTypes[]
+    accountTypes: AccountTypes[];
+
+    @ApiProperty({ type: () => Meta })
+    meta: Meta;
 }
