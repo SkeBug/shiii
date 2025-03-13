@@ -1,12 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import * as argon2 from 'argon2';
 import { CreateUserDto } from './dto/create.user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/database/prisma/prisma.service';
 import { ReadAllUsersDto } from './dto/read-all-users.dto';
 import { Prisma } from '@prisma/client';
 import { ReadOneUserDto } from './dto/read-one-user.dto';
 import { application } from 'express';
+import { UpdateUserRequest } from './dto/update-user-request.dto';
 
 @Injectable()
 export class UsersService {
@@ -556,4 +556,8 @@ export class UsersService {
   //       },
   //     });
   //   }
+
+  async update(id: string, user: UpdateUserRequest) {
+    return 'method not implemented';
+  }
 }

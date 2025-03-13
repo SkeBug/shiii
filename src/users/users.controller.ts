@@ -2,13 +2,13 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query, HttpException
 import { FastifyReply } from 'fastify';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create.user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { ReadAllUsersDto } from './dto/read-all-users.dto';
 import { ReadOneUserDto } from './dto/read-one-user.dto';
 import { JwtAuthGuard } from 'src/auth/jwt.guard';
 import { Roles } from 'src/auth/roles/roles.decorator';
 import { RolesGuard } from 'src/auth/roles/roles.guard';
 import { ApiQuery, ApiResponse } from '@nestjs/swagger';
+import { UpdateUserRequest } from './dto/update-user-request.dto';
 
 @Controller()
 export class UsersController {
@@ -90,16 +90,16 @@ export class UsersController {
     }
   }
 
-//   @Roles('Admin', 'Manager')
-//   @UseGuards(JwtAuthGuard, RolesGuard)
-//   @Patch('user/:id')
-//   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-//     if (Object.keys(updateUserDto).length === 0) {
-//       throw new HttpException("No data to update", HttpStatus.NO_CONTENT);
-//     }
+  // @Roles('Admin', 'Manager')
+  // @UseGuards(JwtAuthGuard, RolesGuard)
+  @Patch('user/:id')
+  update(@Param('id') id: string, @Body() updateUserRequest : UpdateUserRequest) {
+    if (Object.keys(updateUserRequest).length === 0) {
+      throw new HttpException("No data to update", HttpStatus.NO_CONTENT);
+    }
 
-//     return this.usersService.update(id, updateUserDto);
-//   }
+    return this.usersService.update(id, updateUserRequest);
+  }
 
 //   @Roles('Admin', 'Manager')
 //   @UseGuards(JwtAuthGuard, RolesGuard)
