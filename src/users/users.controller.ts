@@ -36,16 +36,16 @@ export class UsersController {
   @ApiQuery({ name: 'page', description: 'The page number', required: false, example: 1 })
   @ApiQuery({ name: 'limit', description: 'The number of items per page', required: false, example: 10 })
   @ApiQuery({ name: 'name', description: 'Name of the user to search (can return multiple results)', required: false, example: 'John Doe' })
-  @ApiQuery({ name: 'email', description: 'Email of the user', required: false, example: 'email.teste@standardbank.co.ao'})
+  @ApiQuery({ name: 'email', description: 'Email of the user (can be partial)', required: false, example: 'email.teste@standardbank.co.ao'})
   @ApiQuery({ 
     name: 'orderBy', 
     required: false, 
     examples: {
-      externalId: { summary: 'externalId', description: 'External identifier of the user', value: 'externalId' },
-      name: { summary: 'name', description: 'Name of the user', value: 'name' },
-      email: { summary: 'email', description: 'Email of the user', value: 'email' },
-      createdAt: { summary: 'createdAt', description: 'Creation date of the user', value: 'createdAt' },
-      updatedAt: { summary: 'updatedAt', description: 'Update date of the user', value: 'updatedAt' },
+      externalId: { summary: 'externalId', description: 'Order by user externalId', value: 'externalId' },
+      name: { summary: 'name', description: 'Order by user name', value: 'name' },
+      email: { summary: 'email', description: 'Order by user email', value: 'email' },
+      createdAt: { summary: 'createdAt', description: 'Order by user creation date', value: 'createdAt' },
+      updatedAt: { summary: 'updatedAt', description: 'Order by user update date', value: 'updatedAt' },
     }
   })
   @ApiQuery({ 
@@ -107,9 +107,11 @@ export class UsersController {
   ): Promise<ReadOneUserResponse | null | string> {
     try {
       const user = await this.usersService.findOne(id);
+
       if (!user) {
         return response.status(HttpStatus.NOT_FOUND).send('User not found');
       }
+      
       return response.status(HttpStatus.OK).send(user);
     } catch (error) {
       return response.status(HttpStatus.BAD_REQUEST).send({ message: error.message });
@@ -125,7 +127,7 @@ export class UsersController {
     required: true,
     example: 'f3d1b3e8-6f4e-4f9a-8d4e-8d3f3e8d4e8d'
   })
-  @ApiResponse({ status: 200, description: 'User updated' })
+  @ApiResponse({ status: 200, description: 'User updated', })
   @ApiResponse({ status: 404, description: 'User not found' })
   @ApiResponse({ status: 400, description: 'Bad request' })
   update(

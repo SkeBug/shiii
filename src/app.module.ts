@@ -9,6 +9,7 @@ import { AuthController } from './auth/auth.controller';
 import { PrismaService } from './database/prisma/prisma.service';
 import { AuthService } from './auth/auth.service';
 import { JwtStrategy } from './auth/jwt.strategy';
+import { AccountTypesModule } from './account-types/account-types.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { JwtStrategy } from './auth/jwt.strategy';
       secret: 'secret',
       signOptions: { expiresIn: '1h' }, 
     }),
+    AccountTypesModule,
   ],
   controllers: [
     AppController,
