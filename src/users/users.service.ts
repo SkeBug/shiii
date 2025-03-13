@@ -1,18 +1,16 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import * as argon2 from 'argon2';
-import { CreateUserDto } from './dto/create.user.dto';
 import { PrismaService } from 'src/database/prisma/prisma.service';
-import { ReadAllUsersDto } from './dto/read-all-users.dto';
 import { Prisma } from '@prisma/client';
-import { ReadOneUserDto } from './dto/read-one-user.dto';
-import { application } from 'express';
 import { UpdateUserRequest } from './dto/update-user-request.dto';
+import { CreateUserRequest } from './dto/create-user-request.dto';
+import { ReadAllUsersResponse } from './dto/read-all-users-response.dto';
 
 @Injectable()
 export class UsersService {
   constructor(private readonly prisma: PrismaService) { }
 
-  async create(user: CreateUserDto) {
+  async create(user: CreateUserRequest) {
     return await this.prisma.$transaction(async (prisma) => {
 
       const role = await prisma.role.findUnique({
@@ -159,7 +157,7 @@ export class UsersService {
     limit: number;
     where: Prisma.UserWhereInput;
     orderBy: Prisma.UserOrderByWithRelationInput;
-  }): Promise<ReadAllUsersDto> {
+  }): Promise<ReadAllUsersResponse> {
 
     const { page, limit, where, orderBy } = params;
 

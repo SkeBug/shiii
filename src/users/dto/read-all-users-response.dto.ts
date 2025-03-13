@@ -213,7 +213,7 @@ class Meta {
     next: string | null
 }
 
-export class ReadAllUsersDto {
+export class ReadAllUsersResponse {
     @ApiProperty({ type: () => [User] })
     users: User[];
 

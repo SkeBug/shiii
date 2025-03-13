@@ -181,7 +181,7 @@ class User {
     applicationsEntitlements: ApplicationsEntitlementsRead[]
 }
 
-export class ReadOneUserDto {
+export class ReadOneUserResponse {
     @ApiProperty({ type: () => User })
     user: User
 }

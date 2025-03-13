@@ -1,7 +1,7 @@
 import { Type } from "class-transformer"
-import { ArrayNotEmpty, ArrayUnique, IsArray, IsEmail, IsNotEmpty, IsOptional, IsString, IsStrongPassword, IsUUID, Validate, ValidateNested } from "class-validator"
+import { ArrayNotEmpty, ArrayUnique, IsArray, IsEmail, IsNotEmpty, IsOptional, IsString, IsStrongPassword, IsUUID } from "class-validator"
 
-export class CreateUserDto {
+export class CreateUserRequest {
     
     /**
      * Represents the name of the user.

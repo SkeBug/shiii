@@ -1,14 +1,14 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query, HttpException, HttpStatus, Res, UseGuards, Req } from '@nestjs/common';
 import { FastifyReply } from 'fastify';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create.user.dto';
-import { ReadAllUsersDto } from './dto/read-all-users.dto';
-import { ReadOneUserDto } from './dto/read-one-user.dto';
 import { JwtAuthGuard } from 'src/auth/jwt.guard';
 import { Roles } from 'src/auth/roles/roles.decorator';
 import { RolesGuard } from 'src/auth/roles/roles.guard';
-import { ApiQuery, ApiResponse } from '@nestjs/swagger';
+import { ApiParam, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { UpdateUserRequest } from './dto/update-user-request.dto';
+import { CreateUserRequest } from './dto/create-user-request.dto';
+import { ReadAllUsersResponse } from './dto/read-all-users-response.dto';
+import { ReadOneUserResponse } from './dto/read-one-user-response.dto';
 
 @Controller()
 export class UsersController {
@@ -19,9 +19,9 @@ export class UsersController {
   // @Roles('Admin', 'Manager')
   // @UseGuards(JwtAuthGuard, RolesGuard)
   @Post('user')
-  async create(@Res() response: FastifyReply, @Body() createUserDto: CreateUserDto) {
+  async create(@Res() response: FastifyReply, @Body() userRequest: CreateUserRequest) {
     try {
-      const user = await this.usersService.create(createUserDto);
+      const user = await this.usersService.create(userRequest);
       return response.status(HttpStatus.CREATED).send(user);
     } catch (error) {
       response.status(HttpStatus.BAD_REQUEST).send({ message: error.message });
@@ -31,13 +31,34 @@ export class UsersController {
 
   // @Roles('Admin', 'Manager')
   // @UseGuards(JwtAuthGuard, RolesGuard) 
+  //examples?: Record<string, ExampleObject | ReferenceObject>;
   @Get('users')
-  @ApiQuery({ name: 'page', required: false })
-  @ApiQuery({ name: 'limit', required: false })
-  @ApiQuery({ name: 'name', required: false })
-  @ApiQuery({ name: 'email', required: false })
-  @ApiQuery({ name: 'orderBy', required: false })
-  @ApiQuery({ name: 'orderByAscOrDesc', required: false })
+  @ApiQuery({ name: 'page', description: 'The page number', required: false, example: 1 })
+  @ApiQuery({ name: 'limit', description: 'The number of items per page', required: false, example: 10 })
+  @ApiQuery({ name: 'name', description: 'Name of the user to search (can return multiple results)', required: false, example: 'John Doe' })
+  @ApiQuery({ name: 'email', description: 'Email of the user', required: false, example: 'email.teste@standardbank.co.ao'})
+  @ApiQuery({ 
+    name: 'orderBy', 
+    required: false, 
+    examples: {
+      externalId: { summary: 'externalId', description: 'External identifier of the user', value: 'externalId' },
+      name: { summary: 'name', description: 'Name of the user', value: 'name' },
+      email: { summary: 'email', description: 'Email of the user', value: 'email' },
+      createdAt: { summary: 'createdAt', description: 'Creation date of the user', value: 'createdAt' },
+      updatedAt: { summary: 'updatedAt', description: 'Update date of the user', value: 'updatedAt' },
+    }
+  })
+  @ApiQuery({ 
+    name: 'orderByAscOrDesc', 
+    required: false,
+    examples: {
+      asc: { summary: 'asc', description: 'Ascending order', value: 'asc' },
+      desc: { summary: 'desc', description: 'Descending order', value: 'desc' },
+    }
+  })
+  @ApiResponse({ status: 200, description: 'Users found', type: ReadAllUsersResponse })
+  @ApiResponse({ status: 404, description: 'Resource not found' })
+  @ApiResponse({ status: 400, description: 'Bad request' })
   readAllUsers(
     @Query('page') page: number,
     @Query('limit') limit: number,
@@ -46,11 +67,11 @@ export class UsersController {
     @Query('orderBy') orderBy: string,
     @Query('orderByAscOrDesc') orderByAscOrDesc: string,
     @Req() req: any
-  ): Promise<ReadAllUsersDto> {
+  ): Promise<ReadAllUsersResponse> {
     const params = {
       page: page ? Number(page) : 1,
       limit: limit ? Number(limit) : 10,
-      orderBy: orderBy ? orderBy : 'createdAt',
+      orderBy: orderBy || 'createdAt',
     };
 
     return this.usersService.readAllUsers({
@@ -71,14 +92,19 @@ export class UsersController {
   // @Roles('Admin', 'Manager')
   // @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('user/:id')
-  @ApiQuery({ name: 'id', required: true })
-  @ApiResponse({ status: 200, description: 'User found', type: ReadOneUserDto })
+  @ApiParam({ 
+    name: 'id', 
+    description: 'The user identifier (UUID - Internal Id)', 
+    required: true, 
+    example: 'f3d1b3e8-6f4e-4f9a-8d4e-8d3f3e8d4e8d' 
+  })
+  @ApiResponse({ status: 200, description: 'User found', type: ReadOneUserResponse })
   @ApiResponse({ status: 404, description: 'User not found' })
   @ApiResponse({ status: 400, description: 'Bad request' })
   async findOne(
+    @Param('id') id: string,
     @Res() response: FastifyReply,
-    @Param('id') id: string
-  ): Promise<ReadOneUserDto | null | string> {
+  ): Promise<ReadOneUserResponse | null | string> {
     try {
       const user = await this.usersService.findOne(id);
       if (!user) {
@@ -92,8 +118,20 @@ export class UsersController {
 
   // @Roles('Admin', 'Manager')
   // @UseGuards(JwtAuthGuard, RolesGuard)
-  @Patch('user/:id')
-  update(@Param('id') id: string, @Body() updateUserRequest : UpdateUserRequest) {
+  @Patch('user/:id')  
+  @ApiParam({ 
+    name: 'id', 
+    description: 'The user identifier (UUID - Internal Id)', 
+    required: true,
+    example: 'f3d1b3e8-6f4e-4f9a-8d4e-8d3f3e8d4e8d'
+  })
+  @ApiResponse({ status: 200, description: 'User updated', type: 'User updated' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  @ApiResponse({ status: 400, description: 'Bad request' })
+  update(
+    @Param('id') id: string, 
+    @Body() updateUserRequest : UpdateUserRequest
+  ) {
     if (Object.keys(updateUserRequest).length === 0) {
       throw new HttpException("No data to update", HttpStatus.NO_CONTENT);
     }
