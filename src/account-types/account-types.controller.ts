@@ -12,7 +12,7 @@ export class AccountTypesController {
   constructor(private readonly accountTypesService: AccountTypesService) { }
 
   @Post()
-  create(@Body() createAccountTypeRequest: CreateAccountTypeRequest) {
+  async create(@Body() createAccountTypeRequest: CreateAccountTypeRequest) {
     return this.accountTypesService.create(createAccountTypeRequest);
   }
 
@@ -41,7 +41,7 @@ export class AccountTypesController {
   @ApiResponse({ status: 404, description: 'Resource not found' })
   @ApiResponse({ status: 400, description: 'Bad request' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
-  findAll(
+  async findAll(
     @Query('page') page: number,
     @Query('limit') limit: number,
     @Query('name') name: string,

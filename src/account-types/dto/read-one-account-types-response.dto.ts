@@ -1,23 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger"
-import { IsNotEmpty, IsString } from "class-validator"
-
-class AccountType {
-    /**
-     * Represents the account type name.
-     * @example "EA"
-     */
-    @IsString()
-    @IsNotEmpty()
-    name: string
-
-    /**
-     * Represents the account type description.
-     * @example "Elevated Account"
-     */
-    @IsString()
-    @IsNotEmpty()
-    description: string
-}
+import { AccountType } from "./common/account-type.dto"
 
 export class ReadOneAccountTypesResponse {
     /**
