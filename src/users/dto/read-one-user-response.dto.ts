@@ -37,7 +37,7 @@ class Area {
      * @example "f3d1b3e8-6f4e-4f9a-8d4e-8d3f3e8d4e8d"
      */
     id: string
-    
+
     /** Represents the name of the area. 
      * @example "SB24"
      */
@@ -122,7 +122,7 @@ class Entitlement {
      * @example "f3d1b3e8-6f4e-4f9a-8d4e-8d3f3e8d4e8d"
      */
     id: string
-    
+
     /** Represents the name of the entitlement.
      * @example "SB24.View"
      */
@@ -179,6 +179,24 @@ class User {
 
     /** Represents each application of the user with its entitlements. */
     applicationsEntitlements: ApplicationsEntitlementsRead[]
+
+    /**
+     * Represents the user status.
+     * @example active
+     */
+    active: boolean
+
+    /**
+     * Represents the user creation date.
+     * @example "2021-10-07T20:00:00.000Z"
+     */
+    createdAt: Date
+
+    /**
+     * Represents the user update date.
+     * @example "2021-10-07T20:00:00.000Z"
+     */
+    updatedAt: Date
 }
 
 export class ReadOneUserResponse {
