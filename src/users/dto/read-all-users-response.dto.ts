@@ -180,6 +180,24 @@ class User {
 
     /** Represents each application of the user with its entitlements. */
     applicationsEntitlements: ApplicationsEntitlementsRead[]
+
+    /**
+     * Represents the user status.
+     * @example true
+     */
+    active: boolean
+
+    /**
+     * Represents the user creation date.
+     * @example "2021-10-07T20:00:00.000Z"
+     */
+    createdAt: Date
+
+    /**
+     * Represents the user update date.
+     * @example "2021-10-07T20:00:00.000Z"
+     */
+    updatedAt: Date
 }
 
 export class ReadAllUsersResponse {
