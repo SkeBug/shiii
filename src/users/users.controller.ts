@@ -10,7 +10,7 @@ import { CreateUserRequest } from './dto/create-user-request.dto';
 import { ReadAllUsersResponse } from './dto/read-all-users-response.dto';
 import { ReadOneUserResponse } from './dto/read-one-user-response.dto';
 
-@Controller()
+@Controller('users')
 export class UsersController {
   constructor(
     private readonly usersService: UsersService
@@ -18,7 +18,7 @@ export class UsersController {
 
   // @Roles('Admin', 'Manager')
   // @UseGuards(JwtAuthGuard, RolesGuard)
-  @Post('user')
+  @Post()
   async create(@Res() response: FastifyReply, @Body() userRequest: CreateUserRequest) {
     try {
       const user = await this.usersService.create(userRequest);
@@ -32,7 +32,7 @@ export class UsersController {
   // @Roles('Admin', 'Manager')
   // @UseGuards(JwtAuthGuard, RolesGuard) 
   //examples?: Record<string, ExampleObject | ReferenceObject>;
-  @Get('users')
+  @Get()
   @ApiQuery({ name: 'page', description: 'The page number', required: false, example: 1 })
   @ApiQuery({ name: 'limit', description: 'The number of items per page', required: false, example: 10 })
   @ApiQuery({ name: 'name', description: 'Name of the user to search (can return multiple results)', required: false, example: 'John Doe' })
@@ -91,7 +91,7 @@ export class UsersController {
 
   // @Roles('Admin', 'Manager')
   // @UseGuards(JwtAuthGuard, RolesGuard)
-  @Get('user/:id')
+  @Get(':id')
   @ApiParam({ 
     name: 'id', 
     description: 'The user identifier (UUID - Internal Id)', 
@@ -120,7 +120,7 @@ export class UsersController {
 
   // @Roles('Admin', 'Manager')
   // @UseGuards(JwtAuthGuard, RolesGuard)
-  @Patch('user/:id')  
+  @Patch(':id')  
   @ApiParam({ 
     name: 'id', 
     description: 'The user identifier (UUID - Internal Id)', 
