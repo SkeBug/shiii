@@ -19,7 +19,7 @@ export class AccountTypeDto {
 
     /**
      * Represents the account type status.
-     * @example active
+     * @example true
      */
     active: boolean
 

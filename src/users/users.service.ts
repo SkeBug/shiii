@@ -327,8 +327,6 @@ export class UsersService {
                 name: applicationEntitlement.entitlement.name,
               })),
           })),
-
-
         active: user.active,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt,
