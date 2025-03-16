@@ -5,6 +5,8 @@ const prisma = new PrismaClient();
 
 async function main() {
 
+    await prisma.user.deleteMany();
+
     await prisma.accountType.createMany({
         data: [
             { name: "SA", description: "Service Account" },
@@ -12,6 +14,7 @@ async function main() {
             { name: "A", description: "Normal Account" },
             { name: "RA", description: "Robot Account" },
         ],
+        skipDuplicates: true,
     });
 
     const typeAccount = await prisma.accountType.findUnique({
@@ -26,6 +29,7 @@ async function main() {
             { name: "Manager", description: "Manager of the team" },
             { name: "Member", description: "Member of the team" },
         ],
+        skipDuplicates: true,
     });
 
     await prisma.area.createMany({
@@ -35,6 +39,7 @@ async function main() {
             { name: "Data Center" },
             { name: "Security" }
         ],
+        skipDuplicates: true,
     });
 
     if (!typeAccount) {
@@ -70,6 +75,7 @@ async function main() {
             { name: "SB24.View", description: "View SB24" },
             { name: "SB24.Edit", description: "Edit SB24" },
         ],
+        skipDuplicates: true,
     });
 
     await prisma.application.createMany({
@@ -78,6 +84,7 @@ async function main() {
             { name: "BOL" },
             { name: "Remedy" },
         ],
+        skipDuplicates: true,
     });
 }
 main()
