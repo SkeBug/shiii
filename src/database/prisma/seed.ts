@@ -5,6 +5,7 @@ const prisma = new PrismaClient();
 
 async function main() {
 
+    await prisma.userAccountTypes.deleteMany();
     await prisma.user.deleteMany();
 
     await prisma.accountType.createMany({
